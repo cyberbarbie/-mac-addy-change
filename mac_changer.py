@@ -3,6 +3,13 @@
 import subprocess
 import optparse
 
+# function that takes the CL arguments and executes our script
+def change_mac(interface, new_mac):
+	print("[+] Changing MAC address for " + interface + " to " + new_mac) 
+	subprocess.call(["ifconfig", interface, "down"])
+	subprocess.call(["ifconfig", interface, "hw", "ether", new_mac])
+	subprocess.call(["ifconfig", interface, "up"])
+
 # create an instance of the OptionParser class
 parser = optparse.OptionParser()
 
@@ -13,13 +20,7 @@ parser.add_option("-m", "--mac", "--MAC", dest="new_mac", help="specifiy new MAC
 # method that captures arguments and options into variables
 (options, arguments) = parser.parse_args()
 
-# access cl arg values - connect variables to destination values
-interface = options.interface
-new_mac = options.new_mac
+# access values in function call to update the mac address 
+change_mac(options.interface, options.new_mac)
 
-print(f"[+] Changing MAC address for {interface} to {new_mac}")
 
-# command we want to execute and run linux commands
-subprocess.call(["ifconfig", interface, "down"])
-subprocess.call(["ifconfig", interface, "hw", "ether", new_mac])
-subprocess.call(["ifconfig", interface, "up"])
